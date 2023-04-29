@@ -1,12 +1,7 @@
 ﻿using Delivery.Extensions;
+using Delivery.Input;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Delivery.States.Road
 {
@@ -15,6 +10,7 @@ namespace Delivery.States.Road
         Texture2D _truck;
         float _speed;
         Vector2 _pos;
+        private VerticalAxis _vertical;
 
         public Vector2 Position => _pos;
 
@@ -27,6 +23,7 @@ namespace Delivery.States.Road
             _truck = game.Content.Load<Texture2D>("truck");
             _speed = speed;
             _pos = new Vector2(32, (192 - 32) / 2);
+            _vertical = new VerticalAxis();
         }
 
         public void Draw(SpriteBatch spriteBatch, Vector2 offset, float deltaTime)
@@ -46,23 +43,8 @@ namespace Delivery.States.Road
 
         public void Update(float deltaTime)
         {
-            KeyboardState state = Keyboard.GetState();
-            Keys[] keys = state.GetPressedKeys();
-            if (keys.Contains(Keys.W))
-            {
-                _pos -= Vector2.UnitY * deltaTime * _speed;
-                if (_pos.Y < 16)
-                {
-                    _pos = new Vector2(32, 16);
-                }
-            } else if (keys.Contains(Keys.S))
-            {
-                _pos += Vector2.UnitY * deltaTime * _speed;
-                if (_pos.Y > 156)
-                {
-                    _pos = new Vector2(32, 156);
-                }
-            }
+            _vertical.Update();
+            _pos += _vertical.Direction * deltaTime * _speed;
         }
     }
 }
