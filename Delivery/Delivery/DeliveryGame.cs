@@ -22,7 +22,8 @@ namespace Delivery
 
         internal Dictionary<string, StateBase> States => _states;
 
-        internal int RoadDurationMs { get; set; } = 6000;
+        internal int StopSpawningPotHolesMs { get; set; } = 12000;
+        internal int RoadDurationMs { get; set; } = 16000;
 
 
         public DeliveryGame()

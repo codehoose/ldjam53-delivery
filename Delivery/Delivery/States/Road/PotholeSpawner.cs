@@ -11,6 +11,7 @@ namespace Delivery.States.Road
         private float _speed;
         private readonly float _spawnSpeed;
         private float _spawnCooldown;
+        private bool _stopSpawningPotholes;
 
         private List<Vector2> _positions = new List<Vector2>();
         private List<int> _indexes = new List<int>();
@@ -24,6 +25,11 @@ namespace Delivery.States.Road
             _speed = speed;
             _spawnSpeed = spawnSpeedMs;
             _spawnCooldown = _spawnSpeed / 2; // First one is a bit quicker than the rest
+        }
+
+        public void StopSpawningPotholes()
+        {
+            _stopSpawningPotholes = true;
         }
 
         public bool Collision(Rectangle rect)
@@ -41,7 +47,7 @@ namespace Delivery.States.Road
         public void Update(float deltaTime)
         {
             _spawnCooldown += deltaTime * 1000f;
-            if (_spawnCooldown >= _spawnSpeed)
+            if (_spawnCooldown >= _spawnSpeed && !_stopSpawningPotholes)
             {
                 int[] yoffsets = new int[] { -60, 0, 60 };
                 int offset = yoffsets[Random.Shared.Next(0, 3)];
@@ -50,7 +56,6 @@ namespace Delivery.States.Road
                 _indexes.Add(Random.Shared.Next(0, 3));
                 _spawnCooldown -= _spawnSpeed;
             }
-
 
             int i = 0;
             while (i < _positions.Count)

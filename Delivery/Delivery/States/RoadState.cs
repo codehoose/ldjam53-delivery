@@ -54,10 +54,9 @@ namespace Delivery.States
             {
                 _road.Update(deltaTime);
             }
-            
 
-            if (!_endRollingRoad)
-                _potholes.Update(deltaTime);
+
+            _potholes.Update(deltaTime);
 
             Rumble.Instance.IsActive = !_endRollingRoad && _potholes.Collision(_truck.Bounds);
             Rumble.Instance.Update(deltaTime);
@@ -67,13 +66,17 @@ namespace Delivery.States
             {
                 _endRollingRoad = true;
             }
+
+            if (_durationMs >= FSM.Game.StopSpawningPotHolesMs)
+            {
+                _potholes.StopSpawningPotholes();
+            }
         }
 
         internal override void Draw(SpriteBatch spriteBatch, float deltaTime)
         {
             _road.Draw(spriteBatch, Rumble.Instance.Offset, deltaTime);
-            if (!_endRollingRoad)
-                _potholes.Draw(spriteBatch, Rumble.Instance.Offset);
+            _potholes.Draw(spriteBatch, Rumble.Instance.Offset);
             _truck.Draw(spriteBatch, Rumble.Instance.Offset, deltaTime);
         }
     }
