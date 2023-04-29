@@ -1,5 +1,4 @@
-﻿using Delivery.FX;
-using Delivery.StateMachine;
+﻿using Delivery.StateMachine;
 using Delivery.States;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -14,6 +13,7 @@ namespace Delivery
         public readonly string CHOOSE_EQUIPMENT_STATE = nameof(CHOOSE_EQUIPMENT_STATE);
         public readonly string PLAY_GAME_STATE  = nameof(PLAY_GAME_STATE);
         public readonly string ROAD_STATE = nameof(ROAD_STATE);
+        public readonly string THROW_PIES_STATE = nameof(THROW_PIES_STATE);
 
         private readonly Dictionary<string, StateBase> _states = new Dictionary<string, StateBase>();
         private GraphicsDeviceManager _graphics;
@@ -21,6 +21,8 @@ namespace Delivery
         private FSM _fsm;
 
         internal Dictionary<string, StateBase> States => _states;
+
+        internal int RoadDurationMs { get; set; } = 6000;
 
 
         public DeliveryGame()

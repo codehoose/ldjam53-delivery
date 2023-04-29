@@ -20,6 +20,7 @@ namespace Delivery.States.Road
 
         public Rectangle Bounds => new Rectangle((int) _pos.X, (int) _pos.Y, _truck.Width, _truck.Height);
 
+        public bool IsAtSide { get; set; }
 
         internal Truck(DeliveryGame game, float speed = 32)
         {
@@ -30,8 +31,17 @@ namespace Delivery.States.Road
 
         public void Draw(SpriteBatch spriteBatch, Vector2 offset, float deltaTime)
         {
-            
             spriteBatch.Draw(_truck, (_pos + offset).RoundPixel(), Color.White);
+        }
+
+        public void MoveToSide(float deltaTime)
+        {
+            _pos += Vector2.UnitY * deltaTime * _speed;
+            if (_pos.Y > 156)
+            {
+                _pos = new Vector2(32, 156);
+                IsAtSide = true;
+            }
         }
 
         public void Update(float deltaTime)

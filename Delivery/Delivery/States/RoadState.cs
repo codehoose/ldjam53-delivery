@@ -10,6 +10,9 @@ namespace Delivery.States
         private RollingRoad _road;
         private Truck _truck;
         private PotholeSpawner _potholes;
+        private float _durationMs;
+        private bool _endRollingRoad;
+        private float _pauseMs;
 
         public RoadState(FSM fsm) : base(fsm)
         {
@@ -30,16 +33,47 @@ namespace Delivery.States
 
         internal override void Update(float deltaTime)
         {
-            _truck.Update(deltaTime);
-            _potholes.Update(deltaTime);
-            Rumble.Instance.IsActive = _potholes.Collision(_truck.Bounds);
+            if (_endRollingRoad)
+            {
+                _truck.MoveToSide(deltaTime);
+                if (_truck.IsAtSide)
+                {
+                    _pauseMs += deltaTime * 1000;
+                    if (_pauseMs >= 3000)
+                    {
+                        FSM.ChangeState(FSM.Game.MAIN_MENU_STATE);
+                    }
+                }
+            }
+            else
+            {
+                _truck.Update(deltaTime);
+            }
+
+            if (!_endRollingRoad || (_endRollingRoad && !_truck.IsAtSide))
+            {
+                _road.Update(deltaTime);
+            }
+            
+
+            if (!_endRollingRoad)
+                _potholes.Update(deltaTime);
+
+            Rumble.Instance.IsActive = !_endRollingRoad && _potholes.Collision(_truck.Bounds);
             Rumble.Instance.Update(deltaTime);
+
+            _durationMs += deltaTime * 1000;
+            if (_durationMs >= FSM.Game.RoadDurationMs)
+            {
+                _endRollingRoad = true;
+            }
         }
 
         internal override void Draw(SpriteBatch spriteBatch, float deltaTime)
         {
             _road.Draw(spriteBatch, Rumble.Instance.Offset, deltaTime);
-            _potholes.Draw(spriteBatch, Rumble.Instance.Offset);
+            if (!_endRollingRoad)
+                _potholes.Draw(spriteBatch, Rumble.Instance.Offset);
             _truck.Draw(spriteBatch, Rumble.Instance.Offset, deltaTime);
         }
     }

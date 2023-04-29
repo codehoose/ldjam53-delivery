@@ -22,14 +22,17 @@ namespace Delivery.States.Road
             _speed = speed;
         }
 
-        internal void Draw(SpriteBatch spriteBatch, Vector2 offset, float deltaTime)
+        internal void Update(float deltaTime)
         {
             _xoff -= deltaTime * _speed;
             if (_xoff < -64)
             {
                 _xoff += 64;
             }
+        }
 
+        internal void Draw(SpriteBatch spriteBatch, Vector2 offset, float deltaTime)
+        {
             int xoff = (int)_xoff;
 
             for (int y = 0; y < 3; y++)
