@@ -13,6 +13,7 @@ namespace Delivery.States.Road
             _blocks[0] = game.Content.Load<Texture2D>("road-block-bottom");
             _blocks[1] = game.Content.Load<Texture2D>("road-block");
             _blocks[2] = game.Content.Load<Texture2D>("road-block-bottom");
+
             _speed = speed;
         }
 
@@ -29,13 +30,12 @@ namespace Delivery.States.Road
         {
             int xoff = (int)_xoff;
 
-            for (int y = 0; y < 3; y++)
+            for (int y = 1; y < 3; y++)
             {
                 for (int x = 0; x < 5; x++)
                 {
                     Vector2 pos = new Vector2(xoff , 12) + offset;
                     pos += new Vector2(x * 64, y * 60);
-
                     spriteBatch.Draw(_blocks[y], pos, Color.White);
                 }
             }

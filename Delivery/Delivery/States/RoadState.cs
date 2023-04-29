@@ -1,6 +1,7 @@
 ﻿using Delivery.FX;
 using Delivery.StateMachine;
 using Delivery.States.Road;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Delivery.States
@@ -13,6 +14,8 @@ namespace Delivery.States
         private float _durationMs;
         private bool _endRollingRoad;
         private float _pauseMs;
+        private Texture2D[] _houses = new Texture2D[3];
+
 
         public RoadState(FSM fsm) : base(fsm)
         {
@@ -24,6 +27,8 @@ namespace Delivery.States
             _road = new RollingRoad(fsm.Game, 48);
             _truck = new Truck(fsm.Game);
             _potholes = new PotholeSpawner(fsm.Game, 48, 3000);
+
+            _houses[0] = FSM.Game.Content.Load<Texture2D>("house");
         }
 
         internal override void Exit(FSM fsm)
@@ -64,7 +69,7 @@ namespace Delivery.States
             _durationMs += deltaTime * 1000;
             if (_durationMs >= FSM.Game.RoadDurationMs)
             {
-                _endRollingRoad = true;
+                //_endRollingRoad = true;
             }
 
             if (_durationMs >= FSM.Game.StopSpawningPotHolesMs)
@@ -76,6 +81,8 @@ namespace Delivery.States
         internal override void Draw(SpriteBatch spriteBatch, float deltaTime)
         {
             _road.Draw(spriteBatch, Rumble.Instance.Offset, deltaTime);
+            spriteBatch.Draw(_houses[0], new Vector2(0, 12) + Rumble.Instance.Offset, Color.White);
+
             _potholes.Draw(spriteBatch, Rumble.Instance.Offset);
             _truck.Draw(spriteBatch, Rumble.Instance.Offset, deltaTime);
         }

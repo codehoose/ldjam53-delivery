@@ -14,6 +14,8 @@ namespace Delivery.States.Road
         float _speed;
         Vector2 _pos;
         private VerticalAxis _vertical;
+        private HorizontalAxis _horizontal;
+        private float _pizzaSpeed;
         private ButtonWithCooldown _fireButton;
 
         List<Vector2> _activePizzas = new List<Vector2>();
@@ -24,24 +26,26 @@ namespace Delivery.States.Road
 
         public bool IsAtSide { get; set; }
 
-        internal Truck(DeliveryGame game, float speed = 32)
+        internal Truck(DeliveryGame game, float speed = 32, float pizzaSpeed = 64)
         {
             _truck = game.Content.Load<Texture2D>("truck");
             _pizza= game.Content.Load<Texture2D>("pizza");
             _speed = speed;
             _pos = new Vector2(32, (192 - 32) / 2);
             _vertical = new VerticalAxis();
+            _horizontal = new HorizontalAxis();
+            _pizzaSpeed = pizzaSpeed;
             _fireButton = new ButtonWithCooldown(Keys.Space, 1000);
         }
 
         public void Draw(SpriteBatch spriteBatch, Vector2 offset, float deltaTime)
         {
-            spriteBatch.Draw(_truck, (_pos + offset).RoundPixel(), Color.White);
-
             foreach (var pos in _activePizzas)
             {
                 spriteBatch.Draw(_pizza, pos.RoundPixel(), Color.White);
             }
+
+            spriteBatch.Draw(_truck, (_pos + offset).RoundPixel(), Color.White);
         }
 
         public void MoveToSide(float deltaTime)
@@ -57,12 +61,15 @@ namespace Delivery.States.Road
         public void Update(float deltaTime)
         {
             _vertical.Update();
+            _horizontal.Update();
             _pos += _vertical.Direction * deltaTime * _speed;
-            _pos = _pos.ClampY(16, 156);
+            _pos += _horizontal.Direction * deltaTime * _speed;
+            _pos = _pos.ClampY(72, 156);
+            _pos = _pos.ClampX(32, 96);
 
             for (int i = 0; i < _activePizzas.Count; i++)
             {
-                _activePizzas[i] += Vector2.UnitY * -1f * deltaTime * _speed;
+                _activePizzas[i] += Vector2.UnitY * -1f * deltaTime * _pizzaSpeed;
             }
 
             if (_fireButton.Update(deltaTime))

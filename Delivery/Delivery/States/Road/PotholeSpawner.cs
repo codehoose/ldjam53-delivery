@@ -49,7 +49,7 @@ namespace Delivery.States.Road
             _spawnCooldown += deltaTime * 1000f;
             if (_spawnCooldown >= _spawnSpeed && !_stopSpawningPotholes)
             {
-                int[] yoffsets = new int[] { -30, 0, 30, 60 };
+                int[] yoffsets = new int[] { 0, 15, 30, 45, 60 };
                 int offset = yoffsets[Random.Shared.Next(0, yoffsets.Length)];
 
                 _positions.Add(new Vector2(256, offset + (192 - POTHOLE_SIZE) / 2) );

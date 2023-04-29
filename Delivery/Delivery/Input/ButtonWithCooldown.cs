@@ -23,9 +23,6 @@ namespace Delivery.Input
             if (isPressed && !_downLastFrame)
                 _downLastFrame = true;
 
-            if (!isPressed)
-                return false;
-
             if (_ms > 0)
             {
                 _ms -= (int)(deltaTime * 1000);
@@ -34,6 +31,11 @@ namespace Delivery.Input
                     _ms = 0;
                 }
 
+                return false;
+            }
+
+            if (!isPressed)
+            {
                 return false;
             }
 

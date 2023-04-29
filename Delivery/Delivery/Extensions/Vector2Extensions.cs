@@ -22,5 +22,19 @@ namespace Delivery.Extensions
 
             return vec;
         }
+
+        public static Vector2 ClampX(this Vector2 vec, float lower, float upper)
+        {
+            if (vec.X < lower)
+            {
+                vec = new Vector2(lower, vec.Y);
+            }
+            else if (vec.X > upper)
+            {
+                vec = new Vector2(upper, vec.Y);
+            }
+
+            return vec;
+        }
     }
 }
