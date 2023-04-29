@@ -26,6 +26,8 @@ namespace Delivery.States.Road
 
         public bool IsAtSide { get; set; }
 
+        public List<Vector2> ActivePizzas => _activePizzas;
+
         internal Truck(DeliveryGame game, float speed = 32, float pizzaSpeed = 64)
         {
             _truck = game.Content.Load<Texture2D>("truck");
@@ -67,9 +69,14 @@ namespace Delivery.States.Road
             _pos = _pos.ClampY(72, 156);
             _pos = _pos.ClampX(32, 96);
 
-            for (int i = 0; i < _activePizzas.Count; i++)
+            int i = 0;
+            while (i < _activePizzas.Count)
             {
                 _activePizzas[i] += Vector2.UnitY * -1f * deltaTime * _pizzaSpeed;
+                if (_activePizzas[i].Y < -16)
+                    _activePizzas.RemoveAt(i);
+                else
+                    i++;
             }
 
             if (_fireButton.Update(deltaTime))

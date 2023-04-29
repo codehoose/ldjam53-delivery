@@ -3,6 +3,7 @@ using Delivery.StateMachine;
 using Delivery.States.Road;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
 
 namespace Delivery.States
 {
@@ -13,6 +14,7 @@ namespace Delivery.States
         private PotholeSpawner _potholes;
         private float _durationMs;
         private bool _endRollingRoad;
+        private EnvironmentManager _environmentManager;
         private float _pauseMs;
         private Texture2D[] _houses = new Texture2D[3];
 
@@ -24,10 +26,10 @@ namespace Delivery.States
 
         internal override void Enter(FSM fsm)
         {
-            _road = new RollingRoad(fsm.Game, 48);
+            _road = new RollingRoad(fsm.Game, fsm.Game.RollingRoadSpeedPixels);
             _truck = new Truck(fsm.Game);
-            _potholes = new PotholeSpawner(fsm.Game, 48, 3000);
-
+            _potholes = new PotholeSpawner(fsm.Game, fsm.Game.RollingRoadSpeedPixels, 3000);
+            _environmentManager = new EnvironmentManager(fsm.Game, fsm.Game.RollingRoadSpeedPixels);
             _houses[0] = FSM.Game.Content.Load<Texture2D>("house");
         }
 
@@ -62,9 +64,38 @@ namespace Delivery.States
 
 
             _potholes.Update(deltaTime);
+            _environmentManager.Update(deltaTime);
 
             Rumble.Instance.IsActive = !_endRollingRoad && _potholes.Collision(_truck.Bounds);
             Rumble.Instance.Update(deltaTime);
+
+
+            List<Rectangle> hitPoints = _environmentManager.GetBounds();
+            if (hitPoints.Count > 0)
+            {
+                int pieIndex = 0;
+                while (pieIndex < _truck.ActivePizzas.Count)
+                {
+                    bool isHit = false;
+                    foreach (var hit in hitPoints)
+                    {
+                        if (hit.Contains(_truck.ActivePizzas[pieIndex]))
+                        {
+                            isHit = true;
+                            break;
+                        }
+                    }
+
+                    if (isHit)
+                    {
+                        _truck.ActivePizzas.RemoveAt(pieIndex);
+                    }
+                    else
+                    {
+                        pieIndex++;
+                    }
+                }
+            }
 
             _durationMs += deltaTime * 1000;
             if (_durationMs >= FSM.Game.RoadDurationMs)
@@ -81,7 +112,7 @@ namespace Delivery.States
         internal override void Draw(SpriteBatch spriteBatch, float deltaTime)
         {
             _road.Draw(spriteBatch, Rumble.Instance.Offset, deltaTime);
-            spriteBatch.Draw(_houses[0], new Vector2(0, 12) + Rumble.Instance.Offset, Color.White);
+            _environmentManager.Draw(spriteBatch);
 
             _potholes.Draw(spriteBatch, Rumble.Instance.Offset);
             _truck.Draw(spriteBatch, Rumble.Instance.Offset, deltaTime);

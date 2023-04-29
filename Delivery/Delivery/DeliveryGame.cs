@@ -25,6 +25,8 @@ namespace Delivery
         internal int StopSpawningPotHolesMs { get; set; } = 12000;
         internal int RoadDurationMs { get; set; } = 16000;
 
+        internal int RollingRoadSpeedPixels { get; set; } = 48;
+
 
         public DeliveryGame()
         {

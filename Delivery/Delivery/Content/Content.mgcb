@@ -49,6 +49,18 @@
 /processorParam:TextureFormat=Color
 /build:house.png
 
+#begin house2.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:house2.png
+
 #begin main-menu.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -156,4 +168,16 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:truck.png
+
+#begin woods.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:woods.png
 
