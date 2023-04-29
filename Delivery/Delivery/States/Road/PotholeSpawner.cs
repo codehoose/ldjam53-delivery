@@ -1,26 +1,26 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SharpDX.Multimedia;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Delivery.States.Road
 {
     internal class PotholeSpawner
     {
-        private Texture2D _pothole;
+        private Texture2D[] _potholes = new Texture2D[3];
         private float _speed;
         private readonly float _spawnSpeed;
         private float _spawnCooldown;
 
-        public List<Vector2> _positions = new List<Vector2>();
+        private List<Vector2> _positions = new List<Vector2>();
+        private List<int> _indexes = new List<int>();
+
 
         public PotholeSpawner(DeliveryGame game, float speed, float spawnSpeedMs)
         {
-            _pothole = game.Content.Load<Texture2D>("pothole");
+            _potholes[0] = game.Content.Load<Texture2D>("pothole");
+            _potholes[1] = game.Content.Load<Texture2D>("pothole-2");
+            _potholes[2] = game.Content.Load<Texture2D>("pothole-3");
             _speed = speed;
             _spawnSpeed = spawnSpeedMs;
             _spawnCooldown = _spawnSpeed / 2; // First one is a bit quicker than the rest
@@ -47,6 +47,7 @@ namespace Delivery.States.Road
                 int offset = yoffsets[Random.Shared.Next(0, 3)];
 
                 _positions.Add(new Vector2(256, offset + (192 - 32) / 2) );
+                _indexes.Add(Random.Shared.Next(0, 3));
                 _spawnCooldown -= _spawnSpeed;
             }
 
@@ -58,6 +59,7 @@ namespace Delivery.States.Road
                 if (_positions[i].X < -32)
                 {
                     _positions.RemoveAt(i);
+                    _indexes.RemoveAt(i);
                 }
                 else
                 {
@@ -70,7 +72,7 @@ namespace Delivery.States.Road
         {
             for (int i = 0; i < _positions.Count; i++)
             {
-                spriteBatch.Draw(_pothole, _positions[i] + offset, Color.White);
+                spriteBatch.Draw(_potholes[_indexes[i]], _positions[i] + offset, Color.White);
             }
         }
     }
