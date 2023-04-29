@@ -1,11 +1,5 @@
-﻿using Delivery.FX;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Delivery.States.Road
 {
@@ -16,7 +10,7 @@ namespace Delivery.States.Road
         private float _speed;
         internal RollingRoad(DeliveryGame game, float speed = 16f)
         {
-            _blocks[0] = game.Content.Load<Texture2D>("road-block-top");
+            _blocks[0] = game.Content.Load<Texture2D>("road-block-bottom");
             _blocks[1] = game.Content.Load<Texture2D>("road-block");
             _blocks[2] = game.Content.Load<Texture2D>("road-block-bottom");
             _speed = speed;
