@@ -23,10 +23,12 @@ namespace Delivery
         internal Dictionary<string, StateBase> States => _states;
 
         internal int StopSpawningPotHolesMs { get; set; } = 12000;
+
         internal int RoadDurationMs { get; set; } = 16000;
 
         internal int RollingRoadSpeedPixels { get; set; } = 48;
 
+        public int Score { get; set; }
 
         public DeliveryGame()
         {

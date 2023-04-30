@@ -2,6 +2,7 @@
 using Delivery.Graphics;
 using Delivery.StateMachine;
 using Delivery.States.Road;
+using Delivery.Timed;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
@@ -13,16 +14,16 @@ namespace Delivery.States
         private RollingRoad _road;
         private Truck _truck;
         private PotholeSpawner _potholes;
-        private float _durationMs;
-        private bool _endRollingRoad;
         private EnvironmentManager _environmentManager;
         private float _pauseMs;
         private Spritesheet _font;
         private Color _fontColour;
         private Color _backgroundColour;
         private Texture2D _background;
+        private TimedAction _scoreUpdater;
 
-        public RoadState(FSM fsm) : base(fsm)
+        public RoadState(FSM fsm) 
+            : base(fsm)
         {
             
         }
@@ -38,6 +39,7 @@ namespace Delivery.States
             _backgroundColour = new Color(208, 208, 88);
             _background = new Texture2D(fsm.Game.GraphicsDevice, 1, 1);
             _background.SetData<Color>(new Color[] { Color.White });
+            _scoreUpdater = new TimedAction(2000, () => FSM.Game.Score += 5);
         }
 
         internal override void Exit(FSM fsm)
@@ -69,13 +71,12 @@ namespace Delivery.States
                 _road.Update(deltaTime);
             }
 
-
+            _scoreUpdater.Update(deltaTime);
             _potholes.Update(deltaTime);
             _environmentManager.Update(deltaTime);
 
             Rumble.Instance.IsActive = !_endRollingRoad && _potholes.Collision(_truck.Bounds);
             Rumble.Instance.Update(deltaTime);
-
 
             List<Rectangle> hitPoints = _environmentManager.GetBounds();
             if (hitPoints.Count > 0)
@@ -96,23 +97,13 @@ namespace Delivery.States
                     if (isHit)
                     {
                         _truck.ActivePizzas.RemoveAt(pieIndex);
+                        FSM.Game.Score += 100;
                     }
                     else
                     {
                         pieIndex++;
                     }
                 }
-            }
-
-            _durationMs += deltaTime * 1000;
-            if (_durationMs >= FSM.Game.RoadDurationMs)
-            {
-                //_endRollingRoad = true;
-            }
-
-            if (_durationMs >= FSM.Game.StopSpawningPotHolesMs)
-            {
-                _potholes.StopSpawningPotholes();
             }
         }
 
@@ -125,7 +116,7 @@ namespace Delivery.States
             _truck.Draw(spriteBatch, Rumble.Instance.Offset, deltaTime);
 
             spriteBatch.Draw(_background, new Rectangle(0, 0, 256, 12), _backgroundColour);
-            _font.Message(spriteBatch, new Vector2(2, 2), "TESTING", _fontColour);
+            _font.Message(spriteBatch, new Vector2(2, 2), $"SCORE: {FSM.Game.Score:000000}", _fontColour);
         }
     }
 }
