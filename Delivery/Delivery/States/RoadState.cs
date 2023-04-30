@@ -19,15 +19,16 @@ namespace Delivery.States
         private RollingRoad _road;
         private Truck _truck;
         private PotholeSpawner _potholes;
-        private bool _endRollingRoad;
         private EnvironmentManager _environmentManager;
         private float _pauseMs;
+        private bool _endRollingRoad;
         private Spritesheet _font;
         private Color _fontColour;
         private Color _backgroundColour;
         private Texture2D _background;
         private OneTimeClip _potholeSfx;
         private OneTimeClip _explosionSfx;
+        private OneTimeClip _pizzaDeliveredSfx;
 
         private TimedAction _scoreUpdater;
 
@@ -50,6 +51,10 @@ namespace Delivery.States
             _scoreUpdater = new TimedAction(2000, () => FSM.Game.Score += 5);
             _potholeSfx = new OneTimeClip(fsm.Game.Content.Load<SoundEffect>("potholefx"));
             _explosionSfx = new OneTimeClip(fsm.Game.Content.Load<SoundEffect>("explosion"));
+            _pizzaDeliveredSfx = new OneTimeClip(fsm.Game.Content.Load<SoundEffect>("powerUp"));
+
+            _endRollingRoad = false;
+            _pauseMs = 0;
         }
 
         internal override void Exit(FSM fsm)
@@ -61,6 +66,7 @@ namespace Delivery.States
         {
             _potholeSfx.Update(deltaTime);
             _explosionSfx.Update(deltaTime);
+            _pizzaDeliveredSfx.Update(deltaTime);
 
             if (_endRollingRoad)
             {
@@ -124,6 +130,7 @@ namespace Delivery.States
                     {
                         _truck.ActivePizzas.RemoveAt(pieIndex);
                         FSM.Game.Score += 100;
+                        _pizzaDeliveredSfx.Play();
                     }
                     else
                     {
