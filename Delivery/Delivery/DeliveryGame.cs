@@ -30,6 +30,8 @@ namespace Delivery
 
         public int Score { get; set; }
 
+        public float Damage { get; set; }
+
         public DeliveryGame()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -52,9 +54,7 @@ namespace Delivery
             _states.Add(MAIN_MENU_STATE, new MainMenuState(_fsm, this));
             _states.Add(CHOOSE_EQUIPMENT_STATE, new ChooseEquipmentState(_fsm));
             _states.Add(ROAD_STATE, new RoadState(_fsm));
-            // TODO: LOAD OTHER STATES
-
-            _fsm.ChangeState(ROAD_STATE);
+            _fsm.ChangeState(MAIN_MENU_STATE);
         }
 
         protected override void Update(GameTime gameTime)
@@ -74,7 +74,7 @@ namespace Delivery
             {
                 GraphicsDevice.SetRenderTarget(target);
 
-                _spriteBatch.Begin();
+                _spriteBatch.Begin(samplerState: SamplerState.PointWrap);
                 _fsm.Draw(_spriteBatch, gameTime);
                 _spriteBatch.End();
 

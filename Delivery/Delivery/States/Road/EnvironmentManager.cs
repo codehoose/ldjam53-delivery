@@ -50,9 +50,9 @@ namespace Delivery.States.Road
             _objs.Add(new EnvObj() { texture = _woods, offset = new Vector2(BLOCK_SIZE * 2, 12) });
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(SpriteBatch spriteBatch, Vector2 offset)
         {
-            Vector2 firstPos = _objs[0].offset.RoundPixel();
+            Vector2 firstPos = (offset + _objs[0].offset).RoundPixel();
             for (int i = 0; i < _objs.Count; i++)
             {
                 spriteBatch.Draw(_objs[i].texture, firstPos, Color.White);

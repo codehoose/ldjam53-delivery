@@ -1,6 +1,8 @@
 ﻿using Delivery.Extensions;
 using Delivery.Input;
+using Delivery.SoundFx;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
@@ -9,6 +11,7 @@ namespace Delivery.States.Road
 {
     internal class Truck
     {
+        private DeliveryGame _game;
         Texture2D _truck;
         Texture2D _pizza;
         float _speed;
@@ -17,6 +20,7 @@ namespace Delivery.States.Road
         private HorizontalAxis _horizontal;
         private float _pizzaSpeed;
         private ButtonWithCooldown _fireButton;
+        private OneTimeClip _pizzaShoot;
 
         List<Vector2> _activePizzas = new List<Vector2>();
 
@@ -30,6 +34,7 @@ namespace Delivery.States.Road
 
         internal Truck(DeliveryGame game, float speed = 32, float pizzaSpeed = 64)
         {
+            _game = game;
             _truck = game.Content.Load<Texture2D>("truck");
             _pizza= game.Content.Load<Texture2D>("pizza");
             _speed = speed;
@@ -38,6 +43,7 @@ namespace Delivery.States.Road
             _horizontal = new HorizontalAxis();
             _pizzaSpeed = pizzaSpeed;
             _fireButton = new ButtonWithCooldown(Keys.Space, 1000);
+            _pizzaShoot = new OneTimeClip(game.Content.Load<SoundEffect>("pizzashoot"));
         }
 
         public void Draw(SpriteBatch spriteBatch, Vector2 offset, float deltaTime)
@@ -55,13 +61,14 @@ namespace Delivery.States.Road
             _pos += Vector2.UnitY * deltaTime * _speed;
             if (_pos.Y > 156)
             {
-                _pos = new Vector2(32, 156);
+                _pos = new Vector2(_pos.X, 156);
                 IsAtSide = true;
             }
         }
 
         public void Update(float deltaTime)
         {
+            _pizzaShoot.Update(deltaTime);
             _vertical.Update();
             _horizontal.Update();
             _pos += _vertical.Direction * deltaTime * _speed;
@@ -74,14 +81,19 @@ namespace Delivery.States.Road
             {
                 _activePizzas[i] += Vector2.UnitY * -1f * deltaTime * _pizzaSpeed;
                 if (_activePizzas[i].Y < -16)
+                {
                     _activePizzas.RemoveAt(i);
+                }
                 else
+                {
                     i++;
+                }
             }
 
             if (_fireButton.Update(deltaTime))
             {
                 _activePizzas.Add(_pos.RoundPixel());
+                _pizzaShoot.Play();
             }
         }
     }

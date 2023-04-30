@@ -25,6 +25,18 @@
 /processorParam:TextureFormat=Color
 /build:arcade-font.png
 
+#begin border.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:border.png
+
 #begin equip-truck.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -36,6 +48,12 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:equip-truck.png
+
+#begin explosion.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:explosion.wav
 
 #begin game-play.png
 /importer:TextureImporter
@@ -97,6 +115,12 @@
 /processorParam:TextureFormat=Color
 /build:pizza.png
 
+#begin pizzashoot.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:pizzashoot.wav
+
 #begin pothole-2.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -132,6 +156,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:pothole.png
+
+#begin potholefx.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:potholefx.wav
+
+#begin powerUp.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:powerUp.wav
 
 #begin road-block-bottom.png
 /importer:TextureImporter

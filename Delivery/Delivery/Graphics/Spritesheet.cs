@@ -11,6 +11,9 @@ namespace Delivery.Graphics
         private int _cellWidth;
         private int _cellHeight;
 
+        public int CellWidth => _cellWidth;
+        public int CellHeight => _cellHeight;
+
         public Spritesheet(Texture2D fontTexture, int columns, int rows)
         {
             _texture = fontTexture;
@@ -18,6 +21,22 @@ namespace Delivery.Graphics
             _rows = rows;
             _cellWidth = _texture.Width / columns;
             _cellHeight = _texture.Height / rows;
+        }
+
+        public void Draw(SpriteBatch spriteBatch, Rectangle rect, int index, Color color)
+        {
+            int px = index % _columns;
+            int py = index / _columns;
+            Rectangle src = new Rectangle(px * _cellWidth, py * _cellHeight, _cellWidth, _cellHeight);
+            spriteBatch.Draw(_texture, rect, src, color);
+        }
+
+        public void Draw(SpriteBatch spriteBatch, int index, Vector2 pos, Color color)
+        {
+            int px = index % _columns;
+            int py = index / _columns;
+            Rectangle src = new Rectangle(px * _cellWidth, py * _cellHeight, _cellWidth, _cellHeight);
+            spriteBatch.Draw(_texture, pos, src, color);
         }
 
         public void Message(SpriteBatch spriteBatch, Vector2 pos, string msg, Color color)
