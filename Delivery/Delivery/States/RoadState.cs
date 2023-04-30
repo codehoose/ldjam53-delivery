@@ -1,4 +1,5 @@
 ﻿using Delivery.FX;
+using Delivery.Graphics;
 using Delivery.StateMachine;
 using Delivery.States.Road;
 using Microsoft.Xna.Framework;
@@ -16,8 +17,10 @@ namespace Delivery.States
         private bool _endRollingRoad;
         private EnvironmentManager _environmentManager;
         private float _pauseMs;
-        private Texture2D[] _houses = new Texture2D[3];
-
+        private Spritesheet _font;
+        private Color _fontColour;
+        private Color _backgroundColour;
+        private Texture2D _background;
 
         public RoadState(FSM fsm) : base(fsm)
         {
@@ -30,7 +33,11 @@ namespace Delivery.States
             _truck = new Truck(fsm.Game);
             _potholes = new PotholeSpawner(fsm.Game, fsm.Game.RollingRoadSpeedPixels, 3000);
             _environmentManager = new EnvironmentManager(fsm.Game, fsm.Game.RollingRoadSpeedPixels);
-            _houses[0] = FSM.Game.Content.Load<Texture2D>("house");
+            _font = new Spritesheet(fsm.Game.Content.Load<Texture2D>("arcade-font"), 8, 8);
+            _fontColour = new Color(64, 80, 16);
+            _backgroundColour = new Color(208, 208, 88);
+            _background = new Texture2D(fsm.Game.GraphicsDevice, 1, 1);
+            _background.SetData<Color>(new Color[] { Color.White });
         }
 
         internal override void Exit(FSM fsm)
@@ -116,6 +123,9 @@ namespace Delivery.States
 
             _potholes.Draw(spriteBatch, Rumble.Instance.Offset);
             _truck.Draw(spriteBatch, Rumble.Instance.Offset, deltaTime);
+
+            spriteBatch.Draw(_background, new Rectangle(0, 0, 256, 12), _backgroundColour);
+            _font.Message(spriteBatch, new Vector2(2, 2), "TESTING", _fontColour);
         }
     }
 }
